@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 //---------------------------------------
-//              WORK IN PROGRESS
+//              DONE
 //---------------------------------------
 module FIFO(
     input clk, rd, wr, rst,
@@ -9,13 +9,13 @@ module FIFO(
     output full, empty
     );
     
-    reg [31:0] mem;
-    reg [31:0] wr_ptr;
-    reg [31:0] rd_ptr;
+    reg [7:0] mem [31:0];
+    reg [4:0] wr_ptr;
+    reg [4:0] rd_ptr;
     
-    always_ff@(posedge clk)
+    always@(posedge clk)
     begin
-        if (rst)
+        if (rst == 1'b1)
         begin
             data_out <= 0;
             wr_ptr <= 0;
@@ -27,14 +27,16 @@ module FIFO(
         end
         else
         begin
-            if ((wr == 1'b0) && (full == 1'b0))
+            if ((wr == 1'b1) && (full == 1'b0))
             begin
                 mem[wr_ptr] <= data_in;
                 wr_ptr <= wr_ptr + 1;
             end
-            else if ((rd == 1'b0) && (empty == 1'b0))
+            if ((rd == 1'b1) && (empty == 1'b0))
+            begin
                 data_out <= mem[rd_ptr];
                 rd_ptr <= rd_ptr + 1;
+            end
         end
     end
     
