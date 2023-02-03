@@ -2,8 +2,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 //                                  WORK IN PROGRESS
 //////////////////////////////////////////////////////////////////////////////////
-
-
 module spi(
     input clk, rst, new_data,
     input [11:0] data_in,
@@ -29,7 +27,7 @@ begin
     else
     begin
         if (count_clk < 50)
-            count_clk++; //count until sclk has been in its current state for 50 clk cycles
+            count_clk <= count_clk + 1; //count until sclk has been in its current state for 50 clk cycles
         else
         begin
             count_clk <= 0; //rst counter_clk to 0
@@ -41,7 +39,7 @@ end
 //State Machine
 always@(posedge sclk)
 begin
-    if(rst)
+    if(rst == 1'b1)
     begin
         cs <= 1'b1;
         mosi <= 1'b0;
